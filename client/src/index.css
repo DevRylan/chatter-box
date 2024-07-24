@@ -1,0 +1,62 @@
+body {
+    background-color: rgb(60, 63, 68);
+    margin: 0px;
+    color: rgb(210, 210, 210);
+    font-family: 'Roboto', sans-serif;
+    font-size: 6pt;
+    display:flex;
+    align-content: center;
+    justify-content: center;
+}
+.message{
+    display: flex;
+    justify-content: left;
+    display: block;
+    transition: background-color 0.2s ease;
+}
+.message:hover{
+    background-color: rgb(100, 103, 108);
+}
+.message-container{
+    overflow-y: auto;
+    height: 500px;
+    width: 500px;
+    display:flex;
+    flex-direction: column;
+    justify-content: end;
+    gap: 5px;
+}
+.chat{
+    border: 5px solid black;
+}
+.input-field{
+    display: flex;
+    width: 100%;
+    align-content: center;
+}
+.message-input{
+    flex-grow: 1;
+    background-color:rgb(100, 103, 108);
+    resize: vertical;
+    overflow-y: hidden;
+    height: auto;
+}
+#login-form{
+    height: 70vh;
+    display:flex;
+    justify-content: center;
+}
+#login-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+}
+.login-input{
+    background-color: rgb(100, 103, 108, 0);
+    border-width: 0px;
+    border-bottom: 1px solid black;
+    width: 300px;
+    font-size: 13pt;
+}
