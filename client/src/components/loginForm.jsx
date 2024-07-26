@@ -1,10 +1,13 @@
 import React from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function LoginForm(){
     const [passwordToggle, toggleChange] = React.useState("password");
     const [userForm, userFormChange] = React.useState({username: "", password: ""});
-    const postAddress = "http://localhost:8080";
+
+    const navigate = useNavigate();
+
     function toggleView(){
         if (passwordToggle === "password"){
             toggleChange("text");
@@ -32,9 +35,10 @@ function LoginForm(){
     }
     async function handleSubmit(){
         console.log(userForm);
-        let loginTest = await axios.post("http://localhost:8080/api/auth/login", userForm);
+        let loginTest = await axios.post("http://localhost:8080/api/auth/login", userForm, {withCredentials: true});
         if (loginTest.data.message == "Login Successful"){
             console.log("login Successful");
+            navigate('/chat');
         }
         else{
             console.log("login Unsuccessful");
