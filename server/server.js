@@ -14,6 +14,7 @@ const server = http.createServer(app);
 
 env.config();
 
+//Configuring middleware/api paths
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true
@@ -40,12 +41,17 @@ const io = new Server(server, {
     },
     
 });
+
+//Configures socket path
+//TODO: move to seperate js file, also send data to database & serve
+//Through an api rather than directly to socket.
 io.on("connection", (socket)=>{
     console.log(`Socket Id ${socket.id} connected`);
     socket.on("send-message", (data)=>{
         socket.broadcast.emit("recieve-message", data);
     })
 });
+
 server.listen(port, ()=>{
     console.log(`Listening on port ${port}`);
 });

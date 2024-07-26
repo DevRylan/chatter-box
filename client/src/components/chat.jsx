@@ -1,8 +1,6 @@
 import React from "react";
 import io from "socket.io-client"
 import Message from "./message"
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const socket = io.connect(import.meta.env.VITE_SERVER_ADDRESS);
 function Chat(){

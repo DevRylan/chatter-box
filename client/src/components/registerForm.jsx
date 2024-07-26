@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 function RegisterForm(){
     const [passwordToggle, toggleChange] = React.useState("password");
     const [userForm, userFormChange] = React.useState({username: "", password: ""});
+    //Hooks for keeping track of input & password visibility
 
     const navigate = useNavigate('/login');
 
@@ -16,8 +17,10 @@ function RegisterForm(){
             toggleChange("password");
         }
     }
-    function updateFormInfo(e){
+
+    function updateFormInfo(e){ //Updated hooks state on input change
         if (e.target.placeholder === "Username"){
+            //Finds which value changed
             userFormChange((prevValue)=>{
             return{
                 username: e.target.value,
@@ -33,14 +36,15 @@ function RegisterForm(){
             })
         }
     }
+
     async function handleSubmit(){
-        console.log(userForm);
-        let loginTest = await axios.post("http://localhost:8080/api/auth/register", userForm);
+        let loginTest = await axios.post(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/auth/register`, userForm);
+
         if (loginTest.data.message == "Login Successful"){
-            console.log("login Successful");
             navigate('/chat');
         }
         else{
+            //TODO: Add display to the user exactly why the form was rejected in the register
             console.log("login Unsuccessful");
         }
     }

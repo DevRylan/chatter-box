@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 function LoginForm(){
     const [passwordToggle, toggleChange] = React.useState("password");
     const [userForm, userFormChange] = React.useState({username: "", password: ""});
-
+    //Hooks for input change and password visiblity toggle
     const navigate = useNavigate();
 
     function toggleView(){
@@ -22,7 +22,7 @@ function LoginForm(){
             return{
                 username: e.target.value,
                 password: prevValue.password
-            }
+            }//Updated the changed value
             });
         }
         else{
@@ -34,13 +34,16 @@ function LoginForm(){
         }
     }
     async function handleSubmit(){
-        console.log(userForm);
-        let loginTest = await axios.post("http://localhost:8080/api/auth/login", userForm, {withCredentials: true});
+        //Submits form & grabs login data
+        let address = import.meta.env.VITE_LOCAL_ADDRESS;
+        let loginTest = await axios.post(`${address}/api/auth/login`, userForm, {withCredentials: true});
+
         if (loginTest.data.message == "Login Successful"){
             console.log("login Successful");
             navigate('/chat');
         }
         else{
+            //TODO: display information on why user could not login
             console.log("login Unsuccessful");
         }
     }

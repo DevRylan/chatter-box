@@ -5,11 +5,14 @@ import bcrypt from "bcrypt";
 import env from "dotenv";
 
 env.config();
+
 passport.use(new LocalStrategy(
     async (username, password, done)=>{
+    //Grabs user data
     const userData = await loginModel(username);
     if (userData.rows.length>0){
     bcrypt.compare(password, userData.rows[0].password, (err, result)=>{
+        //Passes data based on if user successfully logged in
         if(err){
             console.log(`PASSPORT ${err}`);
            done(err)
@@ -24,31 +27,37 @@ passport.use(new LocalStrategy(
         }
     });}
     else{
-        console.log(`PASSPORT USER EXISTS`);
+        console.log(`USER EXISTS`);
         done(null, false, {message: "UserExists"});
     }
 }));
+
 passport.serializeUser((user, done) => {
     done(null, user.id);
   });
   
 passport.deserializeUser(async (id, done) => {
     try {
+        //Returns the user via id through the callback
       const user = await getUserById(id);
       done(null, user.rows[0]);
     } catch (err) {
       done(err);
     }
   });
+
 export default async function register(req, res){
+    //Grabs user data, then sends through login model
     const {username, password} = req.body;
     const userData = await loginModel(username);
     const saltRounds = parseInt(process.env.SALT_ROUNDS);
+
+    //TODO: Refactor so that the test to see if user already exists
+    //Is done through the registration model itself
     console.log("Attempted Registration");
-    console.log(req.body);
     if(userData.rowCount > 0){
+        //If user alread exists
         res.status(401).json({message: "Login Unsuccessful"});
-        console.log("AlreadyExists");
     }
     else{
         bcrypt.hash(password, saltRounds, (err, hash)=>{
@@ -56,7 +65,7 @@ export default async function register(req, res){
                 console.error(`Error hashing password ${err}`);
             }
             else{
-                console.log("registered");
+                //Successful registration
                 registerModel(username, hash)
                 res.status(200).json({message: "Login Successful"});
             }
