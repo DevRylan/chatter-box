@@ -16,6 +16,7 @@ function Chat(){
         event.preventDefault();
         socket.emit("send-message", {message: message});
         setRecieved(prevRecieved=> [...prevRecieved, "Me: "+message]);
+        setMessage('');
         console.log("Message Sent");
     }
     function formatMessage(e, index){

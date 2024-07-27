@@ -13,7 +13,7 @@ router.post('/login', (req, res, next) => {
       }
       if (!user) {
           console.log("Incorrect Data");
-          return res.status(401).json({ message: 'Incorrect username or password' });
+          return res.status(401).json({ message: 'Login Unsuccessful', err: "IncorrectData" });
       }
       //Attempts to log user in
       req.login(user, (err) => {

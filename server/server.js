@@ -42,7 +42,7 @@ const io = new Server(server, {
     
 });
 
-//Configures socket path
+//Configure socket path
 //TODO: move to seperate js file, also send data to database & serve
 //Through an api rather than directly to socket.
 io.on("connection", (socket)=>{

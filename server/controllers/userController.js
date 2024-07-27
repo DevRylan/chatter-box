@@ -57,7 +57,7 @@ export default async function register(req, res){
     console.log("Attempted Registration");
     if(userData.rowCount > 0){
         //If user alread exists
-        res.status(401).json({message: "Login Unsuccessful"});
+        res.status(401).json({message: "Login Unsuccessful", err: "UserExists"});
     }
     else{
         bcrypt.hash(password, saltRounds, (err, hash)=>{

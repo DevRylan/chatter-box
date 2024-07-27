@@ -6,6 +6,7 @@ function LoginForm(){
     const [passwordToggle, toggleChange] = React.useState("password");
     const [userForm, userFormChange] = React.useState({username: "", password: ""});
     //Hooks for input change and password visiblity toggle
+    const [error, errorChange] = React.useState('');
     const navigate = useNavigate();
 
     function toggleView(){
@@ -34,18 +35,18 @@ function LoginForm(){
         }
     }
     async function handleSubmit(){
+        try{
         //Submits form & grabs login data
         let address = import.meta.env.VITE_LOCAL_ADDRESS;
-        let loginTest = await axios.post(`${address}/api/auth/login`, userForm, {withCredentials: true});
-
-        if (loginTest.data.message == "Login Successful"){
-            console.log("login Successful");
-            navigate('/chat');
+        await axios.post(`${address}/api/auth/login`, userForm, {withCredentials: true});
+        console.log("login Successful");
+        navigate('/chat');
         }
-        else{
-            //TODO: display information on why user could not login
-            console.log("login Unsuccessful");
+        catch(err){
+            errorChange("Incorrect Username or Password");
+            console.log("Login Unsuccessful. Error: " +err);
         }
+        console.log('exiting function');
     }
     return(<div id="login-form">
         <form id="login-container">
@@ -53,12 +54,13 @@ function LoginForm(){
                 <h3>Login</h3>
                 <hr/>
             </div>
-            <input type="text" placeholder="Username" onChange={updateFormInfo} className="login-input"/>
+            <input type="text" placeholder="Username" onChange={updateFormInfo} className={`login-input ${error ? "input-error" : ""}`}/>
             <div>
-                <input type={passwordToggle} placeholder="Password" onChange={updateFormInfo} className="login-input"/>
+                <input type={passwordToggle} placeholder="Password" onChange={updateFormInfo} className={`login-input ${error ? "input-error" : ""}`}/>
                 <input type="checkbox" onClick={toggleView}/>
             </div>
             <button type="button" onClick={handleSubmit} className="btn btn-primary">Submit</button>
+            {error ? <h3 className="error-message">{error}</h3> : null}
         </form>
     </div>);
 }
