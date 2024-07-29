@@ -39,7 +39,7 @@ router.get('/check-auth', (req, res) => {
 });
 router.get('/get-id', (req, res)=>{
     if (req.isAuthenticated()){
-        console.log("Server Id: "+req.user.id);
+        //Sends username data
         res.json({ username: req.user.username});
     }
 });
