@@ -37,4 +37,10 @@ router.get('/check-auth', (req, res) => {
       res.json({ isAuthenticated: false });
   }
 });
+router.get('/get-id', (req, res)=>{
+    if (req.isAuthenticated()){
+        console.log("Server Id: "+req.user.id);
+        res.json({ username: req.user.username});
+    }
+});
 export default router;
