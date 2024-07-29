@@ -14,7 +14,10 @@ function Chat(){
         console.log('Inside Effect');
         socket.on("recieve-message", (data)=>{
             setRecieved(prevRecieved=> [...prevRecieved, data.username+": "+data.message]);
-        })
+        });
+        return () => {
+            socket.off("receive-message", handleReceiveMessage);
+        };
     }, [socket]);
     React.useEffect(() => {
         //Fetches and sets the users username
