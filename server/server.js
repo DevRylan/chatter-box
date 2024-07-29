@@ -7,7 +7,7 @@ import authRoutes from "./routes/userRoutes.js";
 import session from "express-session";
 import env from "dotenv";
 import passport from "passport";
-import db from './database.js';
+import { insertMessage } from "./controllers/messageController.js";
 
 const port = 8080;
 const app = express();
@@ -46,11 +46,8 @@ const io = new Server(server, {
 //Configure socket path
 //TODO: move to seperate js file, also send data to database & serve
 io.on("connection", (socket)=>{
-    socket.on("send-message", (data)=>{
-        const dbInsert = async ()=>{
-            await db.query("INSERT INTO messages (sender_id, message_content) VALUES ($1, $2)", [data.id, data.message]);
-        }
-        dbInsert();
+    socket.on("send-message", async (data)=>{
+        await insertMessage(data);
         socket.broadcast.emit("recieve-message", data);
     })
 });
