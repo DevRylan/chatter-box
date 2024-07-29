@@ -39,11 +39,10 @@ function LoginForm(){
         //Submits form & grabs login data
         let address = import.meta.env.VITE_LOCAL_ADDRESS;
         await axios.post(`${address}/api/auth/login`, userForm, {withCredentials: true});
-        const userInfo = await axios.get(`${address}/api/auth/get-id`, { withCredentials: true});
-        console.log("login Successful id: " +userInfo.data.username);
         navigate('/chat');
         }
         catch(err){
+            //Incase of incorrect submit data
             errorChange("Incorrect Username or Password");
             console.log("Login Unsuccessful. Error: " +err);
         }

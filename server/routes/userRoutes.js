@@ -31,16 +31,14 @@ router.post('/register', register);
 
 router.get('/check-auth', (req, res) => {
     //Sends authentication info through api
-  if (req.isAuthenticated()) {
-      res.json({ isAuthenticated: true });
-  } else {
-      res.json({ isAuthenticated: false });
-  }
+    if (req.isAuthenticated()) res.json({ isAuthenticated: true });
+    else res.json({ isAuthenticated: false });
 });
 router.get('/get-id', (req, res)=>{
     if (req.isAuthenticated()){
         //Sends username data
-        res.json({ username: req.user.username});
+        console.log(parseInt(req.user.id));
+        res.json({ username: req.user.username, id: parseInt(req.user.id)});
     }
 });
 export default router;

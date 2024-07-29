@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 function RegisterForm(){
     const [passwordToggle, toggleChange] = React.useState("password");
     const [userForm, userFormChange] = React.useState({username: "", password: ""});
+    const [error, errorChange] = React.useState('');
     //Hooks for keeping track of input & password visibility
-
     const navigate = useNavigate('/login');
 
     function toggleView(){
@@ -39,12 +39,12 @@ function RegisterForm(){
 
     async function handleSubmit(){
         let loginTest = await axios.post(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/auth/register`, userForm);
-
         if (loginTest.data.message == "Login Successful"){
             navigate('/chat');
         }
         else{
             //TODO: Add display to the user exactly why the form was rejected in the register
+            errorChange("Incorrect Username or Password");
             console.log("login Unsuccessful");
         }
     }
@@ -53,13 +53,14 @@ function RegisterForm(){
             <div>
                 <h3>Register</h3>
                 <hr/>
-            </div>
-            <input type="text" placeholder="Username" onChange={updateFormInfo} className="login-input"/>
+                </div>
+            <input type="text" placeholder="Username" onChange={updateFormInfo} className={`login-input ${error ? "input-error" : ""}`}/>
             <div>
-                <input type={passwordToggle} placeholder="Password" onChange={updateFormInfo} className="login-input"/>
+                <input type={passwordToggle} placeholder="Password" onChange={updateFormInfo} className={`login-input ${error ? "input-error" : ""}`}/>
                 <input type="checkbox" onClick={toggleView}/>
             </div>
             <button type="button" onClick={handleSubmit} className="btn btn-primary">Submit</button>
+            {error ? <h3 className="error-message">{error}</h3> : null}
         </form>
     </div>);
 }

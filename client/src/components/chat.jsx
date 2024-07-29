@@ -8,7 +8,7 @@ function Chat(){
     const [message, setMessage] = React.useState("");
     const [recieved, setRecieved] = React.useState([]);
     const [username, usernameChange] = React.useState("");
-
+    const [userid, setUserid] = React.useState(null);
     React.useEffect(()=>{
         //Updates the messages
         console.log('Inside Effect');
@@ -22,6 +22,7 @@ function Chat(){
             try {
                 const response = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/auth/get-id`, { withCredentials: true });
                 usernameChange(response.data.username);
+                setUserid(response.data.id);
                 console.log(`Username is ${response.data.username}`);
             } catch (error) {
                 console.error("Error fetching user data:", error);
@@ -32,7 +33,7 @@ function Chat(){
     function sendMessage(event){
         //Sends message and adds it to message list
         event.preventDefault();
-        socket.emit("send-message", {message: message, username: username});
+        socket.emit("send-message", {message: message, username: username, id: userid});
         setRecieved(prevRecieved=> [...prevRecieved, username+": "+message]);
         setMessage('');
         console.log("Message Sent");

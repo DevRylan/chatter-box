@@ -8,7 +8,7 @@ CREATE TABLE users(
 
 CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
-    sender_id INTEGER NOT NULL,
+    sender_id INTEGER REFERENCES users(id),
     recipient_id INTEGER,
     chatroom_id INTEGER,
     message_content TEXT NOT NULL,
