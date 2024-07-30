@@ -55,7 +55,7 @@ function LoginForm(){
                 <hr/>
             </div>
             <input type="text" placeholder="Username" onChange={updateFormInfo} className={`login-input ${error ? "input-error" : ""}`}/>
-            <div>
+            <div style={{display: "flex"}}>
                 <input type={passwordToggle} placeholder="Password" onChange={updateFormInfo} className={`login-input ${error ? "input-error" : ""}`}/>
                 <input type="checkbox" onClick={toggleView}/>
             </div>

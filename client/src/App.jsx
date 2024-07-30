@@ -1,7 +1,7 @@
 import React from "react";
 import Chat from "./components/chat";
-import LoginForm from "./components/loginForm"
-import RegisterForm from "./components/registerForm";
+import RegisterPage from "./pages/register";
+import LoginPage from "./pages/login";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/protectedRoute";
 function App() {
@@ -9,10 +9,10 @@ function App() {
     <div className="App">
       <BrowserRouter>
       <Routes>
-        <Route index element={<LoginForm/>}/>
+        <Route index element={<LoginPage/>}/>
         {/*Acceses the protected route element which will test if user is authenticated*/}
         <Route path="/chat" element={<ProtectedRoute element={<Chat/>}/>}/>
-        <Route path="/register" element={<RegisterForm/>}/>
+        <Route path="/register" element={<RegisterPage/>}/>
       </Routes>
       </BrowserRouter>
     </div>
