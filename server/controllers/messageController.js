@@ -3,7 +3,7 @@ import { handleMessage, retrieveMessages } from "../models/messageModel.js"
 export async function insertMessage(data){
     //Calls the message model and inserts data
     const id = parseInt(data.id);
-    const result = await handleMessage(id, data.message);
+    const result = await handleMessage(id, data.message, data.username);
     console.log("Message inserted into database "+result);
 }
 export async function getMessages(){
