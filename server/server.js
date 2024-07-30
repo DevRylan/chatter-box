@@ -4,6 +4,7 @@ import bodyParser from "body-parser"
 import cors from "cors";
 import express from "express";
 import authRoutes from "./routes/userRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
 import session from "express-session";
 import env from "dotenv";
 import passport from "passport";
@@ -33,6 +34,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/api/auth', authRoutes);
+app.use('/api', messageRoutes);
 
 const io = new Server(server, {
     cors: {

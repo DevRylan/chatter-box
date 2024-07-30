@@ -15,9 +15,6 @@ function Chat(){
         socket.on("recieve-message", (data)=>{
             setRecieved(prevRecieved=> [...prevRecieved, data.username+": "+data.message]);
         });
-        return () => {
-            socket.off("receive-message", handleReceiveMessage);
-        };
     }, [socket]);
     React.useEffect(() => {
         //Fetches and sets the users username
@@ -33,6 +30,23 @@ function Chat(){
         };
         fetchUserData();
     }, []);
+    React.useEffect(()=>{
+        const fetchMessages = async () => {
+            console.log("Fetching Messages");
+            try{
+                console.log("Attempting to retrieve message");
+                const response = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/get-messages`, {withCredentials: true});
+                console.log("After message retrieval");
+                const messages = response.data;
+                console.log("These are the messages "+messages);
+                for (let i = 0; messages.data.length > i; i++){
+                setRecieved(prevRecieved=> [...prevRecieved, messages[i-1].message_content]);
+                }
+
+            } catch(error){throw error;}
+        }
+        fetchMessages();
+    }, [])
     function sendMessage(event){
         //Sends message and adds it to message list
         event.preventDefault();
