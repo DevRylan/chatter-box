@@ -59,7 +59,7 @@ function LoginForm(){
                 <input type={passwordToggle} placeholder="Password" onChange={updateFormInfo} className={`login-input ${error ? "input-error" : ""}`}/>
                 <input type="checkbox" onClick={toggleView}/>
             </div>
-            <button type="button" onClick={handleSubmit} className="btn btn-primary">Submit</button>
+            <button type="button" onClick={handleSubmit} className="btn btn-primary">Login</button>
             {error ? <h3 className="error-message">{error}</h3> : null}
         </form>
     </div>);

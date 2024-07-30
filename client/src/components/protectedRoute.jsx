@@ -7,14 +7,14 @@ const ProtectedRoute = ({element}) => {
   React.useEffect(()=>{
   const testAuth = async ()=>{
       var isAuthenticated = (await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/auth/check-auth`, {withCredentials: true})).data;
-      console.log("This is the auth status "+isAuthenticated.isAuthenticated+"/n This is the element "+element);
+      console.log("This is the auth status "+isAuthenticated.isAuthenticated);
       if(isAuthenticated.isAuthenticated) {authChange(true)}
       else {authChange(false);}
   }
   testAuth();
 }, [element]);
   if (isAuth === null) return <div>Loading...</div>
-  return isAuth ? element : <Navigate to="/"/>;
+  return isAuth ? element : <Navigate to="/login"/>;
 };
 
 export default ProtectedRoute;

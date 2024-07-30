@@ -9,7 +9,8 @@ function App() {
     <div className="App">
       <BrowserRouter>
       <Routes>
-        <Route index element={<LoginPage/>}/>
+        <Route index element={<ProtectedRoute element={<Chat />}/>}/>
+        <Route path="/login" element={<LoginPage/>}/>
         {/*Acceses the protected route element which will test if user is authenticated*/}
         <Route path="/chat" element={<ProtectedRoute element={<Chat/>}/>}/>
         <Route path="/register" element={<RegisterPage/>}/>
