@@ -34,11 +34,10 @@ function Chat(){
         //Retrieves message History
         const fetchMessages = async () => {
             function addMessage(userMessage){
-                //Puts messages in recieves message array
-                setRecieved(prevRecieved => [...prevRecieved, userMessage.message_content]);
+                //Formats the username and the message of the user and appends it to the array
+                setRecieved(prevRecieved => [...prevRecieved, `${userMessage.username}: ${userMessage.message_content}`]);
             }
             try{
-                //TODO: Retrieve users username and attatch it to array
                 //Retrieves the message from the api and formats it
                 console.log("Attempting to retrieve message");
                 const response = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/get-messages`, {withCredentials: true});
