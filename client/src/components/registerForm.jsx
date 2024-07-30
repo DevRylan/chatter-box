@@ -38,7 +38,7 @@ function RegisterForm(){
     }
 
     async function handleSubmit(){
-        let loginTest = await axios.post(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/auth/register`, userForm);
+        let loginTest = await axios.post(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/auth/register`, userForm, { withCredentials: true});
         if (loginTest.data.message == "Login Successful"){
             navigate('/chat');
         }

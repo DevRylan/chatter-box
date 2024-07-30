@@ -60,14 +60,23 @@ export default async function register(req, res){
         res.status(401).json({message: "Login Unsuccessful", err: "UserExists"});
     }
     else{
-        bcrypt.hash(password, saltRounds, (err, hash)=>{
+        bcrypt.hash(password, saltRounds, async (err, hash)=>{
             if(err){
                 console.error(`Error hashing password ${err}`);
             }
             else{
                 //Successful registration
-                registerModel(username, hash)
-                res.status(200).json({message: "Login Successful"});
+                //Registers data with passport and grabs uesr data
+                await registerModel(username, hash)
+                const newUser = await loginModel(username);
+                req.login(newUser.rows[0], (loginErr) => {
+                    if (loginErr) {
+                        console.error(`Error logging in user ${loginErr}`);
+                        res.status(500).json({ message: "Error logging in user" });
+                    } else {
+                        res.status(200).json({ message: "Login Successful" });
+                    }
+                });
             }
         });
     }
