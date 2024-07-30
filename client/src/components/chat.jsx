@@ -31,18 +31,21 @@ function Chat(){
         fetchUserData();
     }, []);
     React.useEffect(()=>{
+        //Retrieves message History
         const fetchMessages = async () => {
-            console.log("Fetching Messages");
+            function addMessage(userMessage){
+                //Puts messages in recieves message array
+                setRecieved(prevRecieved => [...prevRecieved, userMessage.message_content]);
+            }
             try{
+                //TODO: Retrieve users username and attatch it to array
+                //Retrieves the message from the api and formats it
                 console.log("Attempting to retrieve message");
                 const response = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/get-messages`, {withCredentials: true});
-                console.log("After message retrieval");
                 const messages = response.data;
-                console.log("These are the messages "+messages);
-                for (let i = 0; messages.data.length > i; i++){
-                setRecieved(prevRecieved=> [...prevRecieved, messages[i-1].message_content]);
-                }
-
+                const messagesArray = Object.values(messages);//Converts object to array
+                console.log(messagesArray);
+                messagesArray.forEach(addMessage);
             } catch(error){throw error;}
         }
         fetchMessages();
