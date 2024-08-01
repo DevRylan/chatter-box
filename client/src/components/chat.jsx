@@ -1,11 +1,9 @@
 import React from "react";
-import io from "socket.io-client";
+import socket from "../socket"; 
 import Message from "./message";
 import axios from 'axios';
 
-const socket = io.connect(import.meta.env.VITE_SERVER_ADDRESS);
-
-function Chat() {
+function Chat(props){
     const [message, setMessage] = React.useState("");
     const [recieved, setRecieved] = React.useState([]);//For recieved messages
     const [username, setUsername] = React.useState("");
@@ -17,9 +15,15 @@ function Chat() {
     React.useEffect(() => {
         //Updates the messages
         console.log('Inside Effect');
-        socket.on("recieve-message", (data) => {
+        const handleMessage = (data) => {
             setRecieved(prevRecieved => [...prevRecieved, `${data.username}: ${data.message}`]);
-        });
+        };
+        socket.on("recieve-message", handleMessage);
+        
+        //Cleanup the event listener on component unmount
+        return () => {
+            socket.off("recieve-message", handleMessage);
+        };
     }, []);
 
     React.useEffect(() => {
@@ -59,6 +63,7 @@ function Chat() {
     }, []);
 
     React.useEffect(() => {
+        //Scrollbar logic
         const container = messageContainerRef.current;
         if (container && isAtBottom) {
             container.scrollTop = container.scrollHeight;
@@ -69,7 +74,8 @@ function Chat() {
         if(message.trim() === '' || message.length > 160) setError(true) 
         else {
             event && event.preventDefault(); //Tests if user is sending via button or pressing enter
-            socket.emit("send-message", { message: message, username: username, id: userid });
+            console.log("This is the room "+props.room);
+            socket.emit("send-message", { room: props.room, message: message, username: username, id: userid});
             setRecieved(prevRecieved => [...prevRecieved, `${username}: ${message}`]);
             setMessage('');
             console.log("Message Sent");

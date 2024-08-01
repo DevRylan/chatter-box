@@ -48,9 +48,13 @@ const io = new Server(server, {
 //Configure socket path
 //TODO: move to seperate js file, also send data to database & serve
 io.on("connection", (socket)=>{
+    socket.on("join-room", (room)=>{
+        console.log(`Joining Room ${room}`);
+        socket.join(room);
+    });
     socket.on("send-message", async (data)=>{
         await insertMessage(data);
-        socket.broadcast.emit("recieve-message", data);
+        socket.to(data.room).emit("recieve-message", data);
     })
 });
 

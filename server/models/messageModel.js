@@ -8,7 +8,7 @@ export async function handleMessage(id, message, username){
 }
 export async function retrieveMessages(){
     try{
-        const result = await db.query("SELECT * FROM messages ORDER BY id ASC");
+        const result = await db.query("SELECT * FROM messages ORDER BY id ASC");//Gets messages from database
         return result.rows;
     }catch(err){ throw(err);}
 }
