@@ -7,15 +7,15 @@ const socket = io.connect(import.meta.env.VITE_SERVER_ADDRESS);
 
 function Chat() {
     const [message, setMessage] = React.useState("");
-    const [recieved, setRecieved] = React.useState([]);
+    const [recieved, setRecieved] = React.useState([]);//For recieved messages
     const [username, setUsername] = React.useState("");
     const [userid, setUserid] = React.useState(null);
-    const [error, setError] = React.useState(false);
-    const [isAtBottom, setIsAtBottom] = React.useState(true); // Initialize as true
+    const [error, setError] = React.useState(false);//For input error handling
+    const [isAtBottom, setIsAtBottom] = React.useState(true);//For scroll bar login
     const messageContainerRef = React.useRef(null);
 
     React.useEffect(() => {
-        // Updates the messages
+        //Updates the messages
         console.log('Inside Effect');
         socket.on("recieve-message", (data) => {
             setRecieved(prevRecieved => [...prevRecieved, `${data.username}: ${data.message}`]);
@@ -23,7 +23,7 @@ function Chat() {
     }, []);
 
     React.useEffect(() => {
-        // Fetches and sets the users username
+        // Fetches and sets the user's username
         const fetchUserData = async () => {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/auth/get-id`, { withCredentials: true });
@@ -48,7 +48,7 @@ function Chat() {
                 console.log("Attempting to retrieve message");
                 const response = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/get-messages`, { withCredentials: true });
                 const messages = response.data;
-                const messagesArray = Object.values(messages); //Converts object to array
+                const messagesArray = Object.values(messages); // Converts object to array
                 console.log(messagesArray);
                 messagesArray.forEach(addMessage);
             } catch (error) {
@@ -60,34 +60,36 @@ function Chat() {
 
     React.useEffect(() => {
         const container = messageContainerRef.current;
-
-        if (isAtBottom) {
+        if (container && isAtBottom) {
             container.scrollTop = container.scrollHeight;
         }
     }, [recieved, isAtBottom]);
 
     function sendMessage(event) {
-        if(message.trim() === '' || message.length < 160) setError(true) 
-        else{
-        event && event.preventDefault(); // Tests if user is sending via button or pressing enter
-        socket.emit("send-message", { message: message, username: username, id: userid });
-        setRecieved(prevRecieved => [...prevRecieved, `${username}: ${message}`]);
-        setMessage('');
-        console.log("Message Sent");}
+        if(message.trim() === '' || message.length > 160) setError(true) 
+        else {
+            event && event.preventDefault(); //Tests if user is sending via button or pressing enter
+            socket.emit("send-message", { message: message, username: username, id: userid });
+            setRecieved(prevRecieved => [...prevRecieved, `${username}: ${message}`]);
+            setMessage('');
+            console.log("Message Sent");
+        }
     }
 
     function formatMessage(e, index) {
-        // Returns messages from message component
+        //Returns messages from message component
         return <Message messageText={e} key={index} />;
     }
 
     function handleScroll() {
         const container = messageContainerRef.current;
-        const scrollTop = container.scrollTop;
-        const clientHeight = container.clientHeight;
-        const scrollHeight = container.scrollHeight;
-        //Checks if user is at the bottom
-        setIsAtBottom(scrollHeight - scrollTop === clientHeight);
+        if (container) {
+            const scrollTop = container.scrollTop;
+            const clientHeight = container.clientHeight;
+            const scrollHeight = container.scrollHeight;
+            //checks if user is at the bottom
+            setIsAtBottom(scrollHeight - scrollTop <= clientHeight + 1); //Adds a small buffer
+        }
     }
 
     return (
@@ -103,7 +105,7 @@ function Chat() {
                 <input
                     type="text"
                     onChange={(event) => setMessage(event.target.value)}
-                    onFocus={()=>setError(false)}
+                    onFocus={() => setError(false)}
                     onKeyDown={(e) => e.key === "Enter" && sendMessage()} // Sends message on enter keypress
                     className={`message-input ${error ? "input-error" : ""}`}
                     value={message}
