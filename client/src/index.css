@@ -18,10 +18,9 @@ body {
 .message-container {
     overflow-y: auto;
     height: 94vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
     gap: 5px;
+    display: flex;
+    flex-direction: column
 }
 
 .chat {
