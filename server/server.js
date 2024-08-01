@@ -30,7 +30,7 @@ app.use(session({
     cookie: {
         maxAge: 1000 * 60 * 60 * 24
     }
-}))
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/api/auth', authRoutes);
@@ -52,10 +52,15 @@ io.on("connection", (socket)=>{
         console.log(`Joining Room ${room}`);
         socket.join(room);
     });
+
     socket.on("send-message", async (data)=>{
-        await insertMessage(data);
-        socket.to(data.room).emit("recieve-message", data);
-    })
+        await insertMessage(data);//Inserts into database
+        socket.to(data.room).emit("recieve-message", data);//Only sends to users room
+    });
+
+    socket.on("leave-room", (currentRoom)=>{
+        socket.leave(currentRoom);
+    });
 });
 
 server.listen(port, ()=>{

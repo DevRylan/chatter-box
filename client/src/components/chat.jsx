@@ -19,7 +19,7 @@ function Chat(props){
             setRecieved(prevRecieved => [...prevRecieved, `${data.username}: ${data.message}`]);
         };
         socket.on("recieve-message", handleMessage);
-        
+
         //Cleanup the event listener on component unmount
         return () => {
             socket.off("recieve-message", handleMessage);
@@ -32,7 +32,7 @@ function Chat(props){
             try {
                 const response = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/auth/get-id`, { withCredentials: true });
                 setUsername(response.data.username);
-                setUserid(response.data.id);
+                setUserid(response.data.id);//Sets user state variables
                 console.log(`Username is ${response.data.username}`);
             } catch (error) {
                 console.error("Error fetching user data:", error);
@@ -44,13 +44,15 @@ function Chat(props){
     React.useEffect(() => {
         //Retrieves message history
         const fetchMessages = async () => {
+            console.log("Erasing Data");
+            setRecieved([]);
             function addMessage(userMessage) {
                 //Formats the username and the message of the user and appends it to the array
                 setRecieved(prevRecieved => [...prevRecieved, `${userMessage.username}: ${userMessage.message_content}`]);
             }
             try {
-                console.log("Attempting to retrieve message");
-                const response = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/get-messages`, { withCredentials: true });
+                //Retrieves messages from db
+                const response = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/get-messages`, { withCredentials: true, params: {room: props.room} });
                 const messages = response.data;
                 const messagesArray = Object.values(messages); // Converts object to array
                 console.log(messagesArray);
@@ -60,7 +62,7 @@ function Chat(props){
             }
         };
         fetchMessages();
-    }, []);
+    }, [props.room]);
 
     React.useEffect(() => {
         //Scrollbar logic
@@ -110,7 +112,7 @@ function Chat(props){
                         <h3>Start Of Chat</h3>
                     <hr className="horizontal-line"/>
                 </div>     
-                {recieved.map(formatMessage)}
+                {recieved && recieved.map(formatMessage)}
             </div>
             <div className="input-field">
                 <input
