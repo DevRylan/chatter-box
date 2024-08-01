@@ -85,6 +85,15 @@ body {
     justify-content: start;
     align-items: center;
     height: 10vh;
-    background-color: black;
+    background-color: rgb(40, 43, 48);
     position: absolute;
+}
+#main-interface{
+    display:flex;
+    flex-direction: column;
+    width: 100%;
+}
+#user-container{
+    background-color: rgb(50, 53, 58);
+    width: 10%;
 }

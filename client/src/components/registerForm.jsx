@@ -41,6 +41,9 @@ function RegisterForm(){
         if(userForm.username.length === 0 ){//Checks if username has any text
             errorChange("Enter a Username");
         }
+        else if(userForm.username.length > 10){//Checks username meets length requirement
+            errorChange("Username Must be less than Ten Characters");
+        }
         else if (userForm.password.length < 6){//Makes sure password meets length requirement
             errorChange("Password Must be at Least Six Characters");
         }else{
