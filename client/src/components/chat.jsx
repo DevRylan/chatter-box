@@ -98,7 +98,12 @@ function Chat() {
                 className="message-container"
                 ref={messageContainerRef}
                 onScroll={handleScroll}
-            >
+                >
+                <div className="horizontal-line-container">
+                    <hr className="horizontal-line"/>
+                        <h3>Start Of Chat</h3>
+                    <hr className="horizontal-line"/>
+                </div>     
                 {recieved.map(formatMessage)}
             </div>
             <div className="input-field">
