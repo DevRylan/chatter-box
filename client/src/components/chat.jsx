@@ -7,12 +7,12 @@ const socket = io.connect(import.meta.env.VITE_SERVER_ADDRESS);
 function Chat(){
     const [message, setMessage] = React.useState("");
     const [recieved, setRecieved] = React.useState([]);
-    const [username, usernameChange] = React.useState("");
+    const [username, setUsername] = React.useState("");
+    const [error, setError] = React.useState(false);
     const [userid, setUserid] = React.useState(null);
-    const textsendRef = React.useRef(null);
+
     React.useEffect(()=>{
         //Updates the messages
-        console.log('Inside Effect');
         socket.on("recieve-message", (data)=>{
             setRecieved(prevRecieved=> [...prevRecieved, data.username+": "+data.message]);
         });
@@ -23,7 +23,7 @@ function Chat(){
         const fetchUserData = async () => {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/auth/get-id`, { withCredentials: true });
-                usernameChange(response.data.username);
+                setUsername(response.data.username);
                 setUserid(response.data.id);
                 console.log(`Username is ${response.data.username}`);
             } catch (error) {
@@ -55,11 +55,13 @@ function Chat(){
 
     function sendMessage(event){
         //Sends message and adds it to message list
+        if(message.trim() === '' || message.length > 160) setError(true);
+        else{
         event && event.preventDefault(); //Tests if user is sending via button or pressing enter
         socket.emit("send-message", {message: message, username: username, id: userid});
         setRecieved(prevRecieved=> [...prevRecieved, username+": "+message]);
         setMessage('');
-        console.log("Message Sent");
+        console.log("Message Sent");}
     }
 
     function formatMessage(e, index){
@@ -79,7 +81,8 @@ function Chat(){
                 type="text" 
                 onChange={(event)=>setMessage(event.target.value)} 
                 onKeyDown={(e)=> e.key === "Enter" && sendMessage()}//Sends message on and enter keypress
-                className="message-input" 
+                onFocus={()=>setError(false)}
+                className={`message-input ${error ? "input-error" : ""}`}
                 value={message}
             />
             <input 
