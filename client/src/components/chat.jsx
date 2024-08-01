@@ -9,6 +9,7 @@ function Chat(){
     const [recieved, setRecieved] = React.useState([]);
     const [username, usernameChange] = React.useState("");
     const [userid, setUserid] = React.useState(null);
+    const textsendRef = React.useRef(null);
     React.useEffect(()=>{
         //Updates the messages
         console.log('Inside Effect');
@@ -16,6 +17,7 @@ function Chat(){
             setRecieved(prevRecieved=> [...prevRecieved, data.username+": "+data.message]);
         });
     }, [socket]);
+
     React.useEffect(() => {
         //Fetches and sets the users username
         const fetchUserData = async () => {
@@ -30,6 +32,7 @@ function Chat(){
         };
         fetchUserData();
     }, []);
+
     React.useEffect(()=>{
         //Retrieves message History
         const fetchMessages = async () => {
@@ -48,28 +51,42 @@ function Chat(){
             } catch(error){throw error;}
         }
         fetchMessages();
-    }, [])
+    }, []);
+
     function sendMessage(event){
         //Sends message and adds it to message list
-        event.preventDefault();
+        event && event.preventDefault(); //Tests if user is sending via button or pressing enter
         socket.emit("send-message", {message: message, username: username, id: userid});
         setRecieved(prevRecieved=> [...prevRecieved, username+": "+message]);
         setMessage('');
         console.log("Message Sent");
     }
+
     function formatMessage(e, index){
+        //Returns messages from message component
         return(
             <Message messageText={e} key={index}/>
         );
     }
+
     return(
     <div className="chat">
         <div className="message-container">
             {recieved.map(formatMessage)}
         </div>
         <div className="input-field">
-            <textarea type="text" rows="1" onChange={(event)=>setMessage(event.target.value)} className="message-input" value={message}/>
-            <input type="submit" onClick={sendMessage} className="message-submit"/>
+            <input 
+                type="text" 
+                onChange={(event)=>setMessage(event.target.value)} 
+                onKeyDown={(e)=> e.key === "Enter" && sendMessage()}//Sends message on and enter keypress
+                className="message-input" 
+                value={message}
+            />
+            <input 
+                type="submit" 
+                onClick={sendMessage} 
+                className="message-submit"
+            />
         </div>
     </div>);
 }

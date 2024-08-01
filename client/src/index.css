@@ -17,8 +17,7 @@ body {
 
 .message-container {
     overflow-y: auto;
-    height: 92vh;
-    width: 500px;
+    height: 94vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -27,6 +26,7 @@ body {
 
 .chat {
     border: 5px solid black;
+    width: 90%;
 }
 
 .input-field {
@@ -90,10 +90,11 @@ body {
 }
 #main-interface{
     display:flex;
-    flex-direction: column;
+    flex-direction: row;
     width: 100%;
 }
 #user-container{
     background-color: rgb(50, 53, 58);
     width: 10%;
+    height: 100%;
 }
