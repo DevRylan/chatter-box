@@ -22,7 +22,7 @@ export default function UserList(props){
     function Rooms(room, index){
         //Creates room for each room in array
         return(
-            <button onClick={joinRoom} key={index} className="room-button">
+            <button onClick={joinRoom} key={index} className="btn btn-dark">
                 {room}
             </button>
         );
