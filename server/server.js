@@ -5,6 +5,7 @@ import cors from "cors";
 import express from "express";
 import authRoutes from "./routes/userRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import roomRoutes from "./routes/roomRoutes.js";
 import session from "express-session";
 import env from "dotenv";
 import passport from "passport";
@@ -35,6 +36,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/api/auth', authRoutes);
 app.use('/api', messageRoutes);
+app.use('/api/rooms', roomRoutes);
 
 const io = new Server(server, {
     cors: {

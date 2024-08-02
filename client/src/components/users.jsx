@@ -1,5 +1,6 @@
 import React from "react";
 import socket from "../socket";
+import axios from "axios";
 
 export default function UserList(props){
     const [currentRoom, setCurrentRoom] = React.useState("");
@@ -16,9 +17,17 @@ export default function UserList(props){
     }
 
     function addRoom(){
-        if (customRoom === "" || roomList.includes(customRoom)) setError(true)
+        if (customRoom === "" || roomList.includes(customRoom)) setError(true)//Checks if room name is valid
         else{ 
-        setRoomList(prevValue=>[...prevValue, `${customRoom}`]);}//Adds room to array
+            const result = async ()=>await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/rooms/create-room`, 
+                {withCredentials: true, 
+                 params: {room: customRoom}});//Attempts to post room to database
+            if(result){//Checks if room exists
+            setRoomList(prevValue=>[...prevValue, `${customRoom}`]);}
+            else{
+                setError(true);//Gives error if its exists
+            }
+        }//Adds room to array
     }
 
     function Rooms(room, index){
