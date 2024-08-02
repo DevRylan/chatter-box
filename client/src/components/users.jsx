@@ -5,7 +5,7 @@ export default function UserList(props){
     const [currentRoom, setCurrentRoom] = React.useState("");
     const [roomList, setRoomList] = React.useState(["Hub"]);
     const [customRoom, setCustomRoom] = React.useState("");
-
+    const [error, setError] = React.useState(false);
     function joinRoom(e){
         if (currentRoom && currentRoom != e.target.textContent) socket.emit("leave-room", currentRoom)//Leaves current room user is in
         if(currentRoom != e.target.textContent){//Checks that user clicked a different room
@@ -16,7 +16,9 @@ export default function UserList(props){
     }
 
     function addRoom(){
-        setRoomList(prevValue=>[...prevValue, `${customRoom}`]);//Adds room to array
+        if (customRoom === "" || roomList.includes(customRoom)) setError(true)
+        else{ 
+        setRoomList(prevValue=>[...prevValue, `${customRoom}`]);}//Adds room to array
     }
 
     function Rooms(room, index){
@@ -31,7 +33,7 @@ export default function UserList(props){
     <div id="user-container">
     <button className="btn btn-success" onClick={addRoom}>+Create Room</button>
     <div className="popup">
-        <input type="text" placeholder="Type Here..." onChange={e=>setCustomRoom(e.target.value)} value={customRoom} style={{backgroundColor: "transparent"}}/>
+        <input type="text" placeholder="Type Here..." onChange={e=>setCustomRoom(e.target.value)} className={`${error ? "input-error" : ""}`} onFocus={()=>setError(false)} value={customRoom} style={{backgroundColor: "transparent"}}/>
     </div>
     {roomList.map(Rooms)}
     </div>);
