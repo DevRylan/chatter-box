@@ -6,7 +6,7 @@ export default function UserList(props){
     const [currentRoom, setCurrentRoom] = React.useState("");
     const [roomList, setRoomList] = React.useState(["Hub"]);
     const [customRoom, setCustomRoom] = React.useState("");
-    const [error, setError] = React.useState(false);
+    const [error, setError] = React.useState("");
     function joinRoom(e){
         if (currentRoom && currentRoom != e.target.textContent) socket.emit("leave-room", currentRoom)//Leaves current room user is in
         if(currentRoom != e.target.textContent){//Checks that user clicked a different room
@@ -16,16 +16,18 @@ export default function UserList(props){
             socket.emit("join-room", e.target.textContent);}
     }
 
-    function addRoom(){
-        if (customRoom === "" || roomList.includes(customRoom)) setError(true)//Checks if room name is valid
+    async function addRoom(){
+        if (customRoom === "") setError("Enter a Room Name!")//Checks if room name is valid
         else{ 
-            const result = async ()=>await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/rooms/create-room`, 
+            const result = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/rooms/create-room`, 
                 {withCredentials: true, 
                  params: {room: customRoom}});//Attempts to post room to database
-            if(result){//Checks if room exists
+
+            if(result.data.result){//Checks if room exists
+                console.log("It Works");
             setRoomList(prevValue=>[...prevValue, `${customRoom}`]);}
             else{
-                setError(true);//Gives error if its exists
+                setError("Room Already Exists!");//Gives error if its exists
             }
         }//Adds room to array
     }
@@ -38,11 +40,13 @@ export default function UserList(props){
             </button>
         );
     }
+
     return(
     <div id="user-container">
     <button className="btn btn-success" onClick={addRoom}>+Create Room</button>
     <div className="popup">
-        <input type="text" placeholder="Type Here..." onChange={e=>setCustomRoom(e.target.value)} className={`${error ? "input-error" : ""}`} onFocus={()=>setError(false)} value={customRoom} style={{backgroundColor: "transparent"}}/>
+        {error ? <p>{error}</p> : null}
+        <input type="text" placeholder="Type Here..." onChange={e=>setCustomRoom(e.target.value)} className={`${error ? "input-error" : ""}`} onFocus={()=>setError(null)} value={customRoom} style={{backgroundColor: "transparent"}}/>
     </div>
     {roomList.map(Rooms)}
     </div>);
