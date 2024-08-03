@@ -22,7 +22,6 @@ export default function UserList(props){
             const result = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/rooms/create-room`, 
                 {withCredentials: true, 
                  params: {room: customRoom}});//Attempts to post room to database
-
             if(result.data.result){//Checks if room exists
                 console.log("It Works");
             setRoomList(prevValue=>[...prevValue, `${customRoom}`]);}
@@ -45,8 +44,8 @@ export default function UserList(props){
     <div id="user-container">
     <button className="btn btn-success" onClick={addRoom}>+Create Room</button>
     <div className="popup">
-        {error ? <p>{error}</p> : null}
         <input type="text" placeholder="Type Here..." onChange={e=>setCustomRoom(e.target.value)} className={`${error ? "input-error" : ""}`} onFocus={()=>setError(null)} value={customRoom} style={{backgroundColor: "transparent"}}/>
+        {error ? <p className="room-creation-error">{error}</p> : null}
     </div>
     {roomList.map(Rooms)}
     </div>);
