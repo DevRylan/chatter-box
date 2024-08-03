@@ -32,7 +32,8 @@ export default function UserList(props){
     }
 
     async function addRoom(){
-        if (customRoom === "") setError("Enter a Room Name!")//Checks if room name is valid
+        if (customRoom === "") setError("Enter a Room Name!");//Checks if room name is valid
+        else if(customRoom.length > 10) setError("Rooms can only be up to 10 characters!");
         else{ 
             const result = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/rooms/create-room`, 
                 {withCredentials: true, 
