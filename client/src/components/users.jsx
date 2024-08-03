@@ -7,6 +7,21 @@ export default function UserList(props){
     const [roomList, setRoomList] = React.useState(["Hub"]);
     const [customRoom, setCustomRoom] = React.useState("");
     const [error, setError] = React.useState("");
+    const [open, setOpen] = React.useState(false);
+
+    React.useEffect(async ()=>{
+        function addRoom(room){
+            setRoomList(prevRecieved=> [...prevRecieved, room]);//Adds room to room list array
+        }
+
+        try{
+            const result = await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/rooms/get-rooms`);//Grabs rooms from db
+            const retrievedRooms = result.data;
+
+            retrievedRooms.map(addRoom);//Calls add room function
+        }catch(err){throw(err);}
+    }, [])
+
     function joinRoom(e){
         if (currentRoom && currentRoom != e.target.textContent) socket.emit("leave-room", currentRoom)//Leaves current room user is in
         if(currentRoom != e.target.textContent){//Checks that user clicked a different room
@@ -40,11 +55,30 @@ export default function UserList(props){
         );
     }
 
+    function openPopup(){
+        if(open) setOpen(false);
+        else setOpen(true);
+    }
     return(
     <div id="user-container">
-    <button className="btn btn-success" onClick={addRoom}>+Create Room</button>
-    <div className="popup">
-        <input type="text" placeholder="Type Here..." onChange={e=>setCustomRoom(e.target.value)} className={`${error ? "input-error" : ""}`} onFocus={()=>setError(null)} value={customRoom} style={{backgroundColor: "transparent"}}/>
+
+    <button className="btn btn-success" 
+        onClick={openPopup} 
+        style={{marginTop: "10px"}}>+Join Room</button>
+
+    <div className={`popup-form ${open ? "popup" : "closed"}`}>
+        <input type="text" 
+            placeholder="Type Here..." 
+            onChange={e=>setCustomRoom(e.target.value)} 
+            className={`${error ? "input-error" : ""}`} 
+            onFocus={()=>setError(null)} 
+            value={customRoom} 
+            style={{backgroundColor: "rgb(50, 53, 58)"}}/>
+
+        <button 
+            className="btn btn-success"
+            onClick={addRoom}>Create</button>
+
         {error ? <p className="room-creation-error">{error}</p> : null}
     </div>
     {roomList.map(Rooms)}
