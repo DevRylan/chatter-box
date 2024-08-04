@@ -65,11 +65,11 @@ export default function UserList(props){
 
     <button className="btn btn-success" 
         onClick={openPopup} 
-        style={{marginTop: "10px"}}>+Join Room</button>
+        style={{marginTop: "10px"}}>+Create Room</button>
 
     <div className={`popup-form ${open ? "popup" : "closed"}`}>
         <input type="text" 
-            placeholder="Type Here..." 
+            placeholder="Room Name..." 
             onChange={e=>setCustomRoom(e.target.value)} 
             className={`${error ? "input-error" : ""}`} 
             onFocus={()=>setError(null)} 
