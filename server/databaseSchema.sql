@@ -18,6 +18,12 @@ CREATE TABLE messages (
     FOREIGN KEY (recipient_id) REFERENCES users(id),
     FOREIGN KEY (chatroom_id) REFERENCES chatrooms(id)
 );
+CREATE TABLE privateMessages(
+    id SERIAL PRIMARY KEY,
+    sender_id INTEGER REFERENCES users(id);
+    recipient_id INTEGER,
+    sent_at TIMESTAMT DEFAULT CURRENT_TIMESTAMP,
+);
 
 CREATE TABLE chatrooms (
     id SERIAL PRIMARY KEY,

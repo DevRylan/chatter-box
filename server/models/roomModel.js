@@ -12,6 +12,17 @@ async function roomCreator(room){
     } catch(err) {throw(err)};
 }
 
+async function privateRoomCreator(room, id){
+    try{
+        const result = await db.query("SELECT * FROM users WHERE username = $1", [room]);
+        if (result.rowCount == 0) return(false)//Returns false if doesnt exist
+        else{
+        await db.query("INSERT INTO privaterooms (user1_id, user2_id) VALUES ($1, $2)", [id, result.rows[0].id]);//Inserts into table
+        return(true)
+        }
+    } catch(err) {throw(err)};
+}
+
 async function getRooms(){
     const roomArray = [];//Initializes empty array for roomss
     function addName(room){
@@ -23,4 +34,4 @@ async function getRooms(){
         return (roomArray);
     }catch(err){throw(err);}
 }
-export {roomCreator, getRooms};
+export {roomCreator, getRooms, privateRoomCreator};

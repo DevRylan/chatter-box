@@ -9,6 +9,8 @@ export default function UserList(props) {
     const [error, setError] = React.useState("");
     const [open, setOpen] = React.useState(false);
     const [roomMenu, setRoomMenu] = React.useState(true);
+    const [userSearch, setUserSearch] = React.useState();
+    const [userList, setUserList] = React.useState([]);
 
     React.useEffect(() => {
         const fetchRooms = async () => {
@@ -55,7 +57,20 @@ export default function UserList(props) {
             }
         } // Adds room to array
     }
-
+    
+    async function handleUserSearch(){
+        if(!userSearch) setError("Enter a Room Name!");
+        else{
+        await axios.get(`${import.meta.env.VITE_LOCAL_ADDRESS}/api/rooms/create-private-room`,
+            {
+                withCredentials: true,
+                params: {
+                    user: userSearch
+                }
+            }
+        );    
+        }
+    }
     function Rooms(room, index) {
         // Creates room for each room in array
         return (
@@ -68,7 +83,6 @@ export default function UserList(props) {
     function openPopup() {
         setOpen(!open);
     }
-
     function menu() {
         if (roomMenu) {
             return (
@@ -97,8 +111,26 @@ export default function UserList(props) {
             );
         } else {
             return (
-                <div>
-                    <h1>Test Text</h1>
+                <div className="inner-box">
+                    <button className="btn btn-success"
+                        onClick={openPopup}
+                        style={{ marginTop: "10px" }}>Search User</button>
+
+                    <div className={`popup-form ${open ? "popup" : "closed"}`}>
+                        <input type="text"
+                            placeholder="Username..."
+                            onChange={e => setUserSearch(e.target.value)}
+                            className={`${error ? "input-error" : ""}`}
+                            onFocus={() => setError("")} // Set error to empty string
+                            value={userSearch}
+                            style={{ backgroundColor: "rgb(50, 53, 58)" }} />
+
+                        <button
+                            className="btn btn-success"
+                            onClick={handleUserSearch}>Chat</button>
+
+                        {error ? <p className="room-creation-error">{error}</p> : null}
+                    </div>
                 </div>
             );
         }

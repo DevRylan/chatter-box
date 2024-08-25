@@ -63,6 +63,8 @@ io.on("connection", (socket)=>{
     socket.on("leave-room", (currentRoom)=>{
         socket.leave(currentRoom);
     });
+
+    
 });
 
 server.listen(port, ()=>{
